@@ -30,11 +30,11 @@ PROJECTS_DIR=projects
 #
 # Pull down FreeBSD
 #
-(cd ${PROJECTS_DIR} >/dev/null && [[ -d freebsd ]] \
+(cd ${PROJECTS_DIR} >/dev/null && [ -d freebsd ] \
 	|| git clone ${FREEBSD_URL} freebsd)
  
 #
 # Pull down mfsBSD
 #
-(cd ${PROJECTS_DIR} >/dev/null && [[ -d mfsbsd ]] \
+(cd ${PROJECTS_DIR} >/dev/null && [ -d mfsbsd ] \
 	|| git clone ${MFSBSD_URL} mfsbsd)
