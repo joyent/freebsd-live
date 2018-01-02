@@ -1,0 +1,45 @@
+#!/bin/sh
+#
+# This file and its contents are supplied under the terms of the
+# Common Development and Distribution License ("CDDL"), version 1.0.
+# You may only use this file in accordance with the terms of version
+# 1.0 of the CDDL.
+#
+# A full copy of the text of the CDDL should have accompanied this
+# source.  A copy of the CDDL is also available via the Internet at
+# http://www.illumos.org/license/CDDL.
+#
+
+#
+# Copyright (c) 2018, Joyent, Inc.
+#
+
+# FreeBSD-live pulls down the Joyent FreeBSD sources and mfsbsd and 
+# creates a in-memory version of FreeBSD.
+#
+
+FREEBSD_URL="https://github.com/joyent/freebsd.git"
+FREEBSD_REV=fca563987d5d9e49ae29a28a9ff5569d3caac8a2
+MFSBSD_URL="https://github.com/gwydirsam/mfsbsd.git"
+
+#
+# Setup directories
+#
+PROJECTS_DIR=projects
+BUILD_DIR=build
+IMAGES_DIR=images
+CDROM_DIR=cdrom
+(mkdir -p ${CDROM_DIR} ${PROJECTS_DIR} ${BUILD_DIR} ${IMAGES_DIR})
+
+#
+# Pull down FreeBSD
+#
+(cd ${PROJECTS_DIR} >/dev/null && [ -d freebsd ] \
+	|| git clone ${FREEBSD_URL} freebsd)
+(cd ${PROJECTS_DIR}; git checkout ${FREEBSD_REV})
+ 
+#
+# Pull down mfsBSD
+#
+(cd ${PROJECTS_DIR} >/dev/null && [ -d mfsbsd ] \
+	|| git clone ${MFSBSD_URL} mfsbsd)
