@@ -25,7 +25,8 @@ MFSBSD_URL="https://github.com/gwydirsam/mfsbsd.git"
 # Setup directories
 #
 PROJECTS_DIR=projects
-(mkdir -p ${PROJECTS_DIR})
+BUILD_DIR=projects
+(mkdir -p ${PROJECTS_DIR} ${BUILD_DIR})
 
 #
 # Pull down FreeBSD
