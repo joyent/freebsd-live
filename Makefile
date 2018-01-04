@@ -32,7 +32,7 @@ freebsd:
 
 freebsd-release:
 	(cd ${PROJECT_DIR}/freebsd/release; env MAKEOBJDIRPREFIX=${BUILD_DIR} make dvdrom KERNCONF=${KERNEL} KERNEL=${KERNEL})
-	cp ${BUILD_DIR}/root/src/freebsd-live/projects/freebsd/amd64.amd64/release/dvd1.iso ${IMAGES_DIR}
+	cp ./build/${PROJECT_DIR}/freebsd/amd64.amd64/release/dvd1.iso ${IMAGES_DIR}/.
 
 mount_dvdrom:
 	@echo "==================== Mounting FreeBSD Image  ===================="
