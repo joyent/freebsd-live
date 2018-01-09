@@ -39,6 +39,11 @@ mount_dvdrom:
 	mdconfig -a -t vnode -u 10 -f ${IMAGES_DIR}/dvd1.iso
 	mount_cd9660 /dev/md10 ${CDROM_DIR}
 
+umount_dvdrom:
+	@echo "==================== UnMounting FreeBSD Image  ===================="
+	umount /dev/md10
+	mdconfig -d -u 10
+
 mfsbsd:
 	@echo "==================== Cleaning mfsBSD ===================="
 	(cd ${PROJECT_DIR}/mfsbsd; make clean)
