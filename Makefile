@@ -51,5 +51,5 @@ mfsbsd:
 	(cd ${PROJECT_DIR}/mfsbsd; make BASE=${MFSBSD_BASE} KERNCONF=${KERNEL} PKG_STATIC=${BIN_DIR}/pkg-static MFSROOT_MAXSIZE=${MFSBSD_MFSROOT_MAXSIZE} MFSROOT_FREE_INODES=${MFSBSD_MFSROOT_FREE_INODES} MFSROOT_FREE_BLOCKS=${MFSBSD_MFSROOT_FREE_BLOCKS} IMAGE_PREFIX=${MFSBSD_IMAGE_PREFIX})
 	@echo "==================== Building mfsBSD iso ===================="
 	(cd ${PROJECT_DIR}/mfsbsd; make iso BASE=${MFSBSD_BASE} KERNCONF=${KERNEL} PKG_STATIC=${BIN_DIR}/pkg-static MFSROOT_MAXSIZE=${MFSBSD_MFSROOT_MAXSIZE} MFSROOT_FREE_INODES=${MFSBSD_MFSROOT_FREE_INODES} MFSROOT_FREE_BLOCKS=${MFSBSD_MFSROOT_FREE_BLOCKS} IMAGE_PREFIX=${MFSBSD_IMAGE_PREFIX})
-	cp ${PROJECT_DIR}/mfsbsd/*.img images/.
-	cp ${PROJECT_DIR}/mfsbsd/*.iso images/.
+	cp ${PROJECT_DIR}/mfsbsd/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`.img images/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`-`date "+%Y%m%d%H%M"`.img
+	cp ${PROJECT_DIR}/mfsbsd/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`.iso images/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`-`date "+%Y%m%d%H%M"`.iso
