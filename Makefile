@@ -34,17 +34,17 @@ freebsd-release:
 	(cd ${PROJECT_DIR}/freebsd/release; env MAKEOBJDIRPREFIX=${BUILD_DIR} make dvdrom KERNCONF=${KERNEL} KERNEL=${KERNEL})
 	cp ./build/${PROJECT_DIR}/freebsd/amd64.amd64/release/dvd1.iso ${IMAGES_DIR}/.
 
-mount_dvdrom:
+umount_dvdrom:
+	@echo "==================== UnMounting FreeBSD Image  ===================="
+	umount /dev/md10 || exit 0
+	mdconfig -d -u 10 || exit 0
+
+mount_dvdrom: umount_dvdrom
 	@echo "==================== Mounting FreeBSD Image  ===================="
 	mdconfig -a -t vnode -u 10 -f ${IMAGES_DIR}/dvd1.iso
 	mount_cd9660 /dev/md10 ${CDROM_DIR}
 
-umount_dvdrom:
-	@echo "==================== UnMounting FreeBSD Image  ===================="
-	umount /dev/md10
-	mdconfig -d -u 10
-
-mfsbsd:
+mfsbsd: mount_dvdrom 
 	@echo "==================== Cleaning mfsBSD ===================="
 	(cd ${PROJECT_DIR}/mfsbsd; make clean)
 	@echo "==================== Building mfsBSD USB image ===================="
