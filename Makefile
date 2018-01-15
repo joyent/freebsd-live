@@ -32,7 +32,7 @@ freebsd:
 
 freebsd-release:
 	(cd ${PROJECT_DIR}/freebsd/release; env MAKEOBJDIRPREFIX=${BUILD_DIR} make dvdrom KERNCONF=${KERNEL} KERNEL=${KERNEL})
-	cp ./build/${PROJECT_DIR}/freebsd/amd64.amd64/release/dvd1.iso ${IMAGES_DIR}/.
+	cp ${PROJECT_DIR}/freebsd/release/dvd1.iso ${IMAGES_DIR}/
 
 umount_dvdrom:
 	@echo "==================== UnMounting FreeBSD Image  ===================="
@@ -46,10 +46,11 @@ mount_dvdrom: umount_dvdrom
 
 mfsbsd: mount_dvdrom 
 	@echo "==================== Cleaning mfsBSD ===================="
-	(cd ${PROJECT_DIR}/mfsbsd; make clean)
+	(cd ${PROJECT_DIR}/mfsbsd; mkdir -p tmp; make clean)
+	date +%Y%m%dT%H%M%SZ > ${PROJECT_DIR}/mfsbsd/customfiles/etc/buildstamp
 	@echo "==================== Building mfsBSD USB image ===================="
 	(cd ${PROJECT_DIR}/mfsbsd; make BASE=${MFSBSD_BASE} KERNCONF=${KERNEL} PKG_STATIC=${BIN_DIR}/pkg-static MFSROOT_MAXSIZE=${MFSBSD_MFSROOT_MAXSIZE} MFSROOT_FREE_INODES=${MFSBSD_MFSROOT_FREE_INODES} MFSROOT_FREE_BLOCKS=${MFSBSD_MFSROOT_FREE_BLOCKS} IMAGE_PREFIX=${MFSBSD_IMAGE_PREFIX})
 	@echo "==================== Building mfsBSD iso ===================="
 	(cd ${PROJECT_DIR}/mfsbsd; make iso BASE=${MFSBSD_BASE} KERNCONF=${KERNEL} PKG_STATIC=${BIN_DIR}/pkg-static MFSROOT_MAXSIZE=${MFSBSD_MFSROOT_MAXSIZE} MFSROOT_FREE_INODES=${MFSBSD_MFSROOT_FREE_INODES} MFSROOT_FREE_BLOCKS=${MFSBSD_MFSROOT_FREE_BLOCKS} IMAGE_PREFIX=${MFSBSD_IMAGE_PREFIX})
-	cp ${PROJECT_DIR}/mfsbsd/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`.img images/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`-`date "+%Y%m%d%H%M"`.img
-	cp ${PROJECT_DIR}/mfsbsd/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`.iso images/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`-`date "+%Y%m%d%H%M"`.iso
+	#cp ${PROJECT_DIR}/mfsbsd/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`.img images/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`-`date "+%Y%m%d%H%M"`.img
+	cp ${PROJECT_DIR}/mfsbsd/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`.iso images/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`-`cat ${PROJECT_DIR}/mfsbsd/customfiles/etc/buildstamp`.iso
