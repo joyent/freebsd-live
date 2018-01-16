@@ -20,7 +20,7 @@
 
 FREEBSD_URL="https://github.com/joyent/freebsd.git"
 FREEBSD_REV=fca563987d5d9e49ae29a28a9ff5569d3caac8a2
-MFSBSD_URL="https://github.com/gwydirsam/mfsbsd.git"
+MFSBSD_URL="https://github.com/joyent/mfsbsd.git"
 
 #
 # Setup directories
