@@ -24,15 +24,21 @@ MFSBSD_MFSROOT_FREE_INODES=20%
 MFSBSD_MFSROOT_FREE_BLOCKS=20%
 MFSBSD_IMAGE_PREFIX='Joyent-FreeBSD'
 
-freebsd:
+all: freebsd-live
+
+freebsd: ${ROOT}/.freebsd_done
+${ROOT}/.freebsd_done:
 	@echo "==================== Building FreeBSD World ===================="
 	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} make -DNO_CLEAN -j ${NUM_JOBS} buildworld KERNCONF=${KERNEL})
 	@echo "==================== Building FreeBSD Kernel  ===================="
 	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} make -DNO_CLEAN -j ${NUM_JOBS} buildkernel KERNCONF=${KERNEL})
+	touch ${ROOT}/.freebsd_done
 
-freebsd-release:
+freebsd-release: freebsd ${ROOT}/.freebsd-release_done
+${ROOT}/.freebsd-release_done:
 	(cd ${PROJECT_DIR}/freebsd/release; env MAKEOBJDIRPREFIX=${BUILD_DIR} make dvdrom KERNCONF=${KERNEL} KERNEL=${KERNEL})
 	cp ${PROJECT_DIR}/freebsd/release/dvd1.iso ${IMAGES_DIR}/
+	touch ${ROOT}/.freebsd-release_done
 
 umount_dvdrom:
 	@echo "==================== UnMounting FreeBSD Image  ===================="
@@ -44,7 +50,7 @@ mount_dvdrom: umount_dvdrom
 	mdconfig -a -t vnode -u 10 -f ${IMAGES_DIR}/dvd1.iso
 	mount_cd9660 /dev/md10 ${CDROM_DIR}
 
-mfsbsd: mount_dvdrom 
+mfsbsd: mount_dvdrom
 	@echo "==================== Cleaning mfsBSD ===================="
 	(cd ${PROJECT_DIR}/mfsbsd; mkdir -p tmp; make clean)
 	date +%Y%m%dT%H%M%SZ > ${PROJECT_DIR}/mfsbsd/customfiles/etc/buildstamp
@@ -52,5 +58,10 @@ mfsbsd: mount_dvdrom
 	(cd ${PROJECT_DIR}/mfsbsd; make BASE=${MFSBSD_BASE} KERNCONF=${KERNEL} PKG_STATIC=${BIN_DIR}/pkg-static MFSROOT_MAXSIZE=${MFSBSD_MFSROOT_MAXSIZE} MFSROOT_FREE_INODES=${MFSBSD_MFSROOT_FREE_INODES} MFSROOT_FREE_BLOCKS=${MFSBSD_MFSROOT_FREE_BLOCKS} IMAGE_PREFIX=${MFSBSD_IMAGE_PREFIX})
 	@echo "==================== Building mfsBSD iso ===================="
 	(cd ${PROJECT_DIR}/mfsbsd; make iso BASE=${MFSBSD_BASE} KERNCONF=${KERNEL} PKG_STATIC=${BIN_DIR}/pkg-static MFSROOT_MAXSIZE=${MFSBSD_MFSROOT_MAXSIZE} MFSROOT_FREE_INODES=${MFSBSD_MFSROOT_FREE_INODES} MFSROOT_FREE_BLOCKS=${MFSBSD_MFSROOT_FREE_BLOCKS} IMAGE_PREFIX=${MFSBSD_IMAGE_PREFIX})
-	#cp ${PROJECT_DIR}/mfsbsd/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`.img images/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`-`date "+%Y%m%d%H%M"`.img
-	cp ${PROJECT_DIR}/mfsbsd/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`.iso images/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`-`cat ${PROJECT_DIR}/mfsbsd/customfiles/etc/buildstamp`.iso
+	mv ${PROJECT_DIR}/mfsbsd/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`.img images/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`-`cat ${PROJECT_DIR}/mfsbsd/customfiles/etc/buildstamp`.img
+	mv ${PROJECT_DIR}/mfsbsd/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`.iso images/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`-`cat ${PROJECT_DIR}/mfsbsd/customfiles/etc/buildstamp`.iso
+
+freebsd-live: freebsd freebsd-release mfsbsd
+
+clean:
+	rm ${ROOT}/.freebsd_done ${ROOT}/.freebsd-release_done
