@@ -38,7 +38,7 @@ ${ROOT}/.freebsd_done:
 freebsd-release: freebsd ${ROOT}/.freebsd-release_done
 ${ROOT}/.freebsd-release_done:
 	(cd ${PROJECT_DIR}/freebsd/release; env MAKEOBJDIRPREFIX=${BUILD_DIR} make dvdrom KERNCONF=${KERNEL} KERNEL=${KERNEL})
-	cp ${PROJECT_DIR}/freebsd/release/dvd1.iso ${IMAGES_DIR}/
+	mv ${BUILD_DIR}${PROJECT_DIR}/freebsd/amd64.amd64/release/dvd1.iso ${IMAGES_DIR}/
 	touch ${ROOT}/.freebsd-release_done
 
 umount_dvdrom:
