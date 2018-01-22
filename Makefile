@@ -68,5 +68,19 @@ update:
 
 freebsd-live: freebsd freebsd-release mfsbsd
 
+#
+# For Manual Installation of a Build Machine
+#
+freebsd-install:
+	@echo "==================== Installing FreeBSD Kernel  ===================="
+	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} make -DNO_CLEAN -j ${NUM_JOBS} installkernel KERNCONF=${KERNEL})
+
+freebsd-world-install:
+	@echo "==================== Installing FreeBSD World  ===================="
+	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} mergemaster -p -m ${PROJECT_DIR}/freebsd)
+	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} make -DNO_CLEAN -j ${NUM_JOBS} installworld KERNCONF=${KERNEL})
+	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} mergemaster -iUF -m ${PROJECT_DIR}/freebsd)
+
+
 clean:
 	rm ${ROOT}/.freebsd_done ${ROOT}/.freebsd-release_done
