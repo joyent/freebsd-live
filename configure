@@ -36,7 +36,7 @@ CDROM_DIR=cdrom
 #
 (cd ${PROJECTS_DIR} >/dev/null && [ -d freebsd ] \
 	|| git clone ${FREEBSD_URL} freebsd)
-(cd ${PROJECTS_DIR}; git checkout ${FREEBSD_REV})
+(cd ${PROJECTS_DIR}; git reset --hard ${FREEBSD_REV})
  
 #
 # Pull down mfsBSD
