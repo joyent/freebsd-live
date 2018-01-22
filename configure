@@ -19,7 +19,7 @@
 #
 
 FREEBSD_URL="https://github.com/joyent/freebsd.git"
-FREEBSD_REV=f885ab3cf4b23bed3f2fa64067dd2d2fb8a971cc
+FREEBSD_REV=5b55e311ea506459fed6e68d7a708a4b9a90cb17
 MFSBSD_URL="https://github.com/joyent/mfsbsd.git"
 
 #
