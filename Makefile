@@ -30,7 +30,7 @@ all: freebsd-live
 freebsd: ${ROOT}/.freebsd_done
 ${ROOT}/.freebsd_done:
 	@echo "==================== Building FreeBSD World ===================="
-	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} make -DNO_CLEAN -j ${NUM_JOBS} buildworld KERNCONF=${KERNEL})
+	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} make -DNO_CLEAN -DWITHOUT_CLANG -DWITHOUT_CLANG_BOOTSTRAP -DWITHOUT_LIB32 -DWITHOUT_LLDB -j ${NUM_JOBS} buildworld KERNCONF=${KERNEL})
 	@echo "==================== Building FreeBSD Kernel  ===================="
 	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} make -DNO_CLEAN -j ${NUM_JOBS} buildkernel KERNCONF=${KERNEL})
 	touch ${ROOT}/.freebsd_done
