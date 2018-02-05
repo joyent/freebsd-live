@@ -38,21 +38,21 @@ ${ROOT}/.freebsd_done:
 
 freebsd-release: freebsd ${ROOT}/.freebsd-release_done
 ${ROOT}/.freebsd-release_done:
-	(cd ${PROJECT_DIR}/freebsd/release; env MAKEOBJDIRPREFIX=${BUILD_DIR} make cdrom KERNCONF=${KERNEL} KERNEL=${KERNEL})
-	mv ${BUILD_DIR}${PROJECT_DIR}/freebsd/amd64.amd64/release/disc1.iso ${IMAGES_DIR}/
+	(cd ${PROJECT_DIR}/freebsd/release; env MAKEOBJDIRPREFIX=${BUILD_DIR} make dvdrom KERNCONF=${KERNEL} KERNEL=${KERNEL})
+	mv ${BUILD_DIR}${PROJECT_DIR}/freebsd/amd64.amd64/release/dvd1.iso ${IMAGES_DIR}/
 	touch ${ROOT}/.freebsd-release_done
 
-umount_cdrom:
+umount_dvdrom:
 	@echo "==================== UnMounting FreeBSD Image  ===================="
 	umount /dev/md10 || exit 0
 	mdconfig -d -u 10 || exit 0
 
-mount_cdrom: umount_cdrom
+mount_dvdrom: umount_dvdrom
 	@echo "==================== Mounting FreeBSD Image  ===================="
-	mdconfig -a -t vnode -u 10 -f ${IMAGES_DIR}/disc1.iso
+	mdconfig -a -t vnode -u 10 -f ${IMAGES_DIR}/dvd1.iso
 	mount_cd9660 /dev/md10 ${CDROM_DIR}
 
-mfsbsd: mount_cdrom
+mfsbsd: mount_dvdrom
 	@echo "==================== Cleaning mfsBSD ===================="
 	(cd ${PROJECT_DIR}/mfsbsd; mkdir -p tmp; make clean)
 	echo "${DATE}" > ${PROJECT_DIR}/mfsbsd/customfiles/etc/buildstamp
