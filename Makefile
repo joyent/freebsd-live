@@ -61,7 +61,7 @@ mfsbsd: mount_cdrom
 	mv -v ${PROJECT_DIR}/mfsbsd/${MFSBSD_IMAGE_PREFIX}-${DATE}.img images/${MFSBSD_IMAGE_PREFIX}-${DATE}.img
 	@echo "==================== Building mfsBSD iso ===================="
 	(cd ${PROJECT_DIR}/mfsbsd; make iso BASE=${MFSBSD_BASE} KERNCONF=${KERNEL} PKG_STATIC=${BIN_DIR}/pkg-static MFSROOT_MAXSIZE=${MFSBSD_MFSROOT_MAXSIZE} MFSROOT_FREE_INODES=${MFSBSD_MFSROOT_FREE_INODES} MFSROOT_FREE_BLOCKS=${MFSBSD_MFSROOT_FREE_BLOCKS} IMAGE_PREFIX=${MFSBSD_IMAGE_PREFIX} IMAGE=${MFSBSD_IMAGE_PREFIX}-${DATE}.iso ISOIMAGE=${MFSBSD_IMAGE_PREFIX}-${DATE}.iso)
-	mv -v ${PROJECT_DIR}/mfsbsd/${MFSBSD_IMAGE_PREFIX}-${DATE}.iso images/${MFSBSD_IMAGE_PREFIX}-${DATE}.iso
+	mv -v ${PROJECT_DIR}/mfsbsd/${MFSBSD_IMAGE_PREFIX}-${DATE}.iso ${IMAGES_DIR}/${MFSBSD_IMAGE_PREFIX}-${DATE}.iso
 
 update:
 	(cd ${PROJECT_DIR}/mfsbsd; git pull --rebase)
