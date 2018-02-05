@@ -1,6 +1,7 @@
 #
 # Project Variables
 #
+DATE != date +%Y%m%dT%H%M%SZ
 ROOT = ${PWD}
 BUILD_DIR ?= ${ROOT}/build
 PROJECT_DIR = ${ROOT}/projects
@@ -23,7 +24,7 @@ MFSBSD_BASE=${ROOT}/cdrom/usr/freebsd-dist
 MFSBSD_MFSROOT_MAXSIZE=256m
 MFSBSD_MFSROOT_FREE_INODES=20%
 MFSBSD_MFSROOT_FREE_BLOCKS=20%
-MFSBSD_IMAGE_PREFIX='Joyent-FreeBSD'
+MFSBSD_IMAGE_PREFIX=Joyent-FreeBSD
 
 all: freebsd-live
 
@@ -54,13 +55,13 @@ mount_cdrom: umount_cdrom
 mfsbsd: mount_cdrom
 	@echo "==================== Cleaning mfsBSD ===================="
 	(cd ${PROJECT_DIR}/mfsbsd; mkdir -p tmp; make clean)
-	date +%Y%m%dT%H%M%SZ > ${PROJECT_DIR}/mfsbsd/customfiles/etc/buildstamp
+	echo "${DATE}" > ${PROJECT_DIR}/mfsbsd/customfiles/etc/buildstamp
 	@echo "==================== Building mfsBSD USB image ===================="
-	(cd ${PROJECT_DIR}/mfsbsd; make BASE=${MFSBSD_BASE} KERNCONF=${KERNEL} PKG_STATIC=${BIN_DIR}/pkg-static MFSROOT_MAXSIZE=${MFSBSD_MFSROOT_MAXSIZE} MFSROOT_FREE_INODES=${MFSBSD_MFSROOT_FREE_INODES} MFSROOT_FREE_BLOCKS=${MFSBSD_MFSROOT_FREE_BLOCKS} IMAGE_PREFIX=${MFSBSD_IMAGE_PREFIX})
+	(cd ${PROJECT_DIR}/mfsbsd; make BASE=${MFSBSD_BASE} KERNCONF=${KERNEL} PKG_STATIC=${BIN_DIR}/pkg-static MFSROOT_MAXSIZE=${MFSBSD_MFSROOT_MAXSIZE} MFSROOT_FREE_INODES=${MFSBSD_MFSROOT_FREE_INODES} MFSROOT_FREE_BLOCKS=${MFSBSD_MFSROOT_FREE_BLOCKS} IMAGE_PREFIX=${MFSBSD_IMAGE_PREFIX} IMAGE=${MFSBSD_IMAGE_PREFIX}-${DATE}.img ISOIMAGE=${MFSBSD_IMAGE_PREFIX}-${DATE}.img)
+	mv -v ${PROJECT_DIR}/mfsbsd/${MFSBSD_IMAGE_PREFIX}-${DATE}.img images/${MFSBSD_IMAGE_PREFIX}-${DATE}.img
 	@echo "==================== Building mfsBSD iso ===================="
-	(cd ${PROJECT_DIR}/mfsbsd; make iso BASE=${MFSBSD_BASE} KERNCONF=${KERNEL} PKG_STATIC=${BIN_DIR}/pkg-static MFSROOT_MAXSIZE=${MFSBSD_MFSROOT_MAXSIZE} MFSROOT_FREE_INODES=${MFSBSD_MFSROOT_FREE_INODES} MFSROOT_FREE_BLOCKS=${MFSBSD_MFSROOT_FREE_BLOCKS} IMAGE_PREFIX=${MFSBSD_IMAGE_PREFIX})
-	mv ${PROJECT_DIR}/mfsbsd/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`.img images/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`-`cat ${PROJECT_DIR}/mfsbsd/customfiles/etc/buildstamp`.img
-	mv ${PROJECT_DIR}/mfsbsd/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`.iso images/${MFSBSD_IMAGE_PREFIX}-`uname -r`-`sysctl -n hw.machine_arch`-`cat ${PROJECT_DIR}/mfsbsd/customfiles/etc/buildstamp`.iso
+	(cd ${PROJECT_DIR}/mfsbsd; make iso BASE=${MFSBSD_BASE} KERNCONF=${KERNEL} PKG_STATIC=${BIN_DIR}/pkg-static MFSROOT_MAXSIZE=${MFSBSD_MFSROOT_MAXSIZE} MFSROOT_FREE_INODES=${MFSBSD_MFSROOT_FREE_INODES} MFSROOT_FREE_BLOCKS=${MFSBSD_MFSROOT_FREE_BLOCKS} IMAGE_PREFIX=${MFSBSD_IMAGE_PREFIX} IMAGE=${MFSBSD_IMAGE_PREFIX}-${DATE}.iso ISOIMAGE=${MFSBSD_IMAGE_PREFIX}-${DATE}.iso)
+	mv -v ${PROJECT_DIR}/mfsbsd/${MFSBSD_IMAGE_PREFIX}-${DATE}.iso images/${MFSBSD_IMAGE_PREFIX}-${DATE}.iso
 
 update:
 	(cd ${PROJECT_DIR}/mfsbsd; git pull --rebase)
