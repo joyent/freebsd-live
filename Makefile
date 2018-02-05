@@ -4,7 +4,7 @@
 ROOT = ${PWD}
 BUILD_DIR ?= ${ROOT}/build
 PROJECT_DIR = ${ROOT}/projects
-IMAGES_DIR = ${ROOT}/images
+IMAGES_DIR ?= ${ROOT}/images
 BIN_DIR = ${ROOT}/bin
 CONF_DIR = ${ROOT}/conf
 CDROM_DIR = ${ROOT}/cdrom
