@@ -84,4 +84,4 @@ freebsd-world-install:
 
 
 clean:
-	rm ${ROOT}/.freebsd_done ${ROOT}/.freebsd-release_done
+	rm -f ${ROOT}/.freebsd_done ${ROOT}/.freebsd-release_done
