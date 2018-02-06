@@ -31,15 +31,15 @@ all: freebsd-live
 freebsd: ${ROOT}/.freebsd_done
 ${ROOT}/.freebsd_done:
 	@echo "==================== Building FreeBSD World ===================="
-	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} make -DNO_CLEAN -DWITHOUT_CLANG -DWITHOUT_CLANG_BOOTSTRAP -DWITHOUT_LIB32 -DWITHOUT_LLDB -j ${NUM_JOBS} buildworld KERNCONF=${KERNEL})
+	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} make -j ${NUM_JOBS} buildworld KERNCONF=${KERNEL})
 	@echo "==================== Building FreeBSD Kernel  ===================="
-	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} make -DNO_CLEAN -j ${NUM_JOBS} buildkernel KERNCONF=${KERNEL})
+	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} make -j ${NUM_JOBS} buildkernel KERNCONF=${KERNEL})
 	touch ${ROOT}/.freebsd_done
 
 freebsd-release: freebsd ${ROOT}/.freebsd-release_done
 ${ROOT}/.freebsd-release_done:
 	(cd ${PROJECT_DIR}/freebsd/release; env MAKEOBJDIRPREFIX=${BUILD_DIR} make dvdrom KERNCONF=${KERNEL} KERNEL=${KERNEL})
-	mv ${BUILD_DIR}${PROJECT_DIR}/freebsd/amd64.amd64/release/dvd1.iso ${IMAGES_DIR}/
+	mv ${PROJECT_DIR}/freebsd/release/dvd1.iso ${IMAGES_DIR}/
 	touch ${ROOT}/.freebsd-release_done
 
 umount_dvdrom:
@@ -57,11 +57,12 @@ mfsbsd: mount_dvdrom
 	(cd ${PROJECT_DIR}/mfsbsd; mkdir -p tmp; make clean)
 	echo "${DATE}" > ${PROJECT_DIR}/mfsbsd/customfiles/etc/buildstamp
 	@echo "==================== Building mfsBSD USB image ===================="
-	(cd ${PROJECT_DIR}/mfsbsd; make BASE=${MFSBSD_BASE} KERNCONF=${KERNEL} PKG_STATIC=${BIN_DIR}/pkg-static MFSROOT_MAXSIZE=${MFSBSD_MFSROOT_MAXSIZE} MFSROOT_FREE_INODES=${MFSBSD_MFSROOT_FREE_INODES} MFSROOT_FREE_BLOCKS=${MFSBSD_MFSROOT_FREE_BLOCKS} IMAGE_PREFIX=${MFSBSD_IMAGE_PREFIX} IMAGE=${MFSBSD_IMAGE_PREFIX}-${DATE}.img ISOIMAGE=${MFSBSD_IMAGE_PREFIX}-${DATE}.img)
-	mv -v ${PROJECT_DIR}/mfsbsd/${MFSBSD_IMAGE_PREFIX}-${DATE}.img ${IMAGES_DIR}/${MFSBSD_IMAGE_PREFIX}-${DATE}.img
+	(cd ${PROJECT_DIR}/mfsbsd; make BASE=${MFSBSD_BASE} KERNCONF=${KERNEL} PKG_STATIC=${BIN_DIR}/pkg-static MFSROOT_MAXSIZE=${MFSBSD_MFSROOT_MAXSIZE} MFSROOT_FREE_INODES=${MFSBSD_MFSROOT_FREE_INODES} MFSROOT_FREE_BLOCKS=${MFSBSD_MFSROOT_FREE_BLOCKS} IMAGE_PREFIX=${MFSBSD_IMAGE_PREFIX})
+	mv -v ${PROJECT_DIR}/mfsbsd/${MFSBSD_IMAGE_PREFIX}-12.0-CURRENT-amd64.img images/${MFSBSD_IMAGE_PREFIX}-12.0-CURRENT-amd64.img
 	@echo "==================== Building mfsBSD iso ===================="
-	(cd ${PROJECT_DIR}/mfsbsd; make iso BASE=${MFSBSD_BASE} KERNCONF=${KERNEL} PKG_STATIC=${BIN_DIR}/pkg-static MFSROOT_MAXSIZE=${MFSBSD_MFSROOT_MAXSIZE} MFSROOT_FREE_INODES=${MFSBSD_MFSROOT_FREE_INODES} MFSROOT_FREE_BLOCKS=${MFSBSD_MFSROOT_FREE_BLOCKS} IMAGE_PREFIX=${MFSBSD_IMAGE_PREFIX} IMAGE=${MFSBSD_IMAGE_PREFIX}-${DATE}.iso ISOIMAGE=${MFSBSD_IMAGE_PREFIX}-${DATE}.iso)
-	mv -v ${PROJECT_DIR}/mfsbsd/${MFSBSD_IMAGE_PREFIX}-${DATE}.iso ${IMAGES_DIR}/${MFSBSD_IMAGE_PREFIX}-${DATE}.iso
+	(cd ${PROJECT_DIR}/mfsbsd; make iso BASE=${MFSBSD_BASE} KERNCONF=${KERNEL} PKG_STATIC=${BIN_DIR}/pkg-static MFSROOT_MAXSIZE=${MFSBSD_MFSROOT_MAXSIZE} MFSROOT_FREE_INODES=${MFSBSD_MFSROOT_FREE_INODES} MFSROOT_FREE_BLOCKS=${MFSBSD_MFSROOT_FREE_BLOCKS} IMAGE_PREFIX=${MFSBSD_IMAGE_PREFIX})
+	@echo "==================== Moving to images_dir  ===================="
+	mv -v ${PROJECT_DIR}/mfsbsd/${MFSBSD_IMAGE_PREFIX}-12.0-CURRENT-amd64.iso images/${MFSBSD_IMAGE_PREFIX}-12.0-CURRENT-amd64.iso
 
 update:
 	(cd ${PROJECT_DIR}/mfsbsd; git pull --rebase)
