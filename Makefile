@@ -61,8 +61,8 @@ mfsbsd: mount_dvdrom
 	@echo "==================== Building mfsBSD iso ===================="
 	(cd ${PROJECT_DIR}/mfsbsd; make iso BASE=${MFSBSD_BASE} KERNCONF=${KERNEL} PKG_STATIC=${BIN_DIR}/pkg-static MFSROOT_MAXSIZE=${MFSBSD_MFSROOT_MAXSIZE} MFSROOT_FREE_INODES=${MFSBSD_MFSROOT_FREE_INODES} MFSROOT_FREE_BLOCKS=${MFSBSD_MFSROOT_FREE_BLOCKS} IMAGE_PREFIX=${MFSBSD_IMAGE_PREFIX})
 	@echo "==================== Moving to images_dir  ===================="
-	mv -v ${PROJECT_DIR}/mfsbsd/${MFSBSD_IMAGE_PREFIX}-12.0-CURRENT-amd64.img ${IMAGES_DIR}/${MFSBSD_IMAGE_PREFIX}-12.0-CURRENT-amd64.img
-	mv -v ${PROJECT_DIR}/mfsbsd/${MFSBSD_IMAGE_PREFIX}-12.0-CURRENT-amd64.iso ${IMAGES_DIR}/${MFSBSD_IMAGE_PREFIX}-12.0-CURRENT-amd64.iso
+	mv -v ${PROJECT_DIR}/mfsbsd/*.img ${IMAGES_DIR}/
+	mv -v ${PROJECT_DIR}/mfsbsd/*.iso ${IMAGES_DIR}/
 
 update:
 	(cd ${PROJECT_DIR}/mfsbsd; git pull --rebase)
