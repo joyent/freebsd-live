@@ -28,13 +28,19 @@ MFSBSD_IMAGE_PREFIX=Joyent-FreeBSD
 
 all: freebsd-live
 
-freebsd: ${ROOT}/.freebsd_done
-${ROOT}/.freebsd_done:
+freebsd: freebsd-world freebsd-kernel
+
+freebsd-world: ${ROOT}/.freebsd-world_done
+${ROOT}/.freebsd-world_done:
 	@echo "==================== Building FreeBSD World ===================="
 	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} make -j ${NUM_JOBS} buildworld KERNCONF=${KERNEL})
+	touch ${ROOT}/.freebsd-world_done
+
+freebsd-kernel: freebsd-world ${ROOT}/.freebsd-kernel_done
+${ROOT}/.freebsd-kernel_done:
 	@echo "==================== Building FreeBSD Kernel  ===================="
 	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} make -j ${NUM_JOBS} buildkernel KERNCONF=${KERNEL})
-	touch ${ROOT}/.freebsd_done
+	touch ${ROOT}/.freebsd-kernel_done
 
 freebsd-release: freebsd ${ROOT}/.freebsd-release_done
 ${ROOT}/.freebsd-release_done:
