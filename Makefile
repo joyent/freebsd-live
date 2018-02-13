@@ -33,32 +33,32 @@ freebsd: freebsd-world freebsd-kernel
 freebsd-world: ${ROOT}/.freebsd-world_done
 ${ROOT}/.freebsd-world_done:
 	@echo "==================== Building FreeBSD World ===================="
-	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} make -j ${NUM_JOBS} buildworld KERNCONF=${KERNEL})
+	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} make -DNO_CLEAN -j ${NUM_JOBS} buildworld KERNCONF=${KERNEL})
 	touch ${ROOT}/.freebsd-world_done
 
 freebsd-kernel: freebsd-world ${ROOT}/.freebsd-kernel_done
 ${ROOT}/.freebsd-kernel_done:
 	@echo "==================== Building FreeBSD Kernel  ===================="
-	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} make -j ${NUM_JOBS} buildkernel KERNCONF=${KERNEL})
+	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} make -DNO_CLEAN -j ${NUM_JOBS} buildkernel KERNCONF=${KERNEL})
 	touch ${ROOT}/.freebsd-kernel_done
 
 freebsd-release: freebsd ${ROOT}/.freebsd-release_done
 ${ROOT}/.freebsd-release_done:
-	(cd ${PROJECT_DIR}/freebsd/release; env MAKEOBJDIRPREFIX=${BUILD_DIR} make dvdrom KERNCONF=${KERNEL} KERNEL=${KERNEL})
-	mv ${PROJECT_DIR}/freebsd/release/dvd1.iso ${IMAGES_DIR}/
+	(cd ${PROJECT_DIR}/freebsd/release; env MAKEOBJDIRPREFIX=${BUILD_DIR} make clean cdrom KERNCONF=${KERNEL} KERNEL=${KERNEL})
+	mv ${PROJECT_DIR}/freebsd/release/disc1.iso ${IMAGES_DIR}/
 	touch ${ROOT}/.freebsd-release_done
 
-umount_dvdrom:
+umount_cdrom:
 	@echo "==================== UnMounting FreeBSD Image  ===================="
 	umount /dev/md10 || exit 0
 	mdconfig -d -u 10 || exit 0
 
-mount_dvdrom: umount_dvdrom
+mount_cdrom: umount_cdrom
 	@echo "==================== Mounting FreeBSD Image  ===================="
-	mdconfig -a -t vnode -u 10 -f ${IMAGES_DIR}/dvd1.iso
+	mdconfig -a -t vnode -u 10 -f ${IMAGES_DIR}/disc1.iso
 	mount_cd9660 /dev/md10 ${CDROM_DIR}
 
-mfsbsd: mount_dvdrom
+mfsbsd: mount_cdrom
 	@echo "==================== Cleaning mfsBSD ===================="
 	(cd ${PROJECT_DIR}/mfsbsd; mkdir -p tmp; make clean)
 	echo "${DATE}" > ${PROJECT_DIR}/mfsbsd/customfiles/etc/buildstamp
