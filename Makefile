@@ -41,30 +41,14 @@ ${ROOT}/.freebsd-kernel_done:
 	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} make -DNO_CLEAN -j ${NUM_JOBS} buildkernel KERNCONF=${KERNEL})
 	touch ${ROOT}/.freebsd-kernel_done
 
-freebsd-release: freebsd ${ROOT}/.freebsd-release_done
-${ROOT}/.freebsd-release_done:
-	(cd ${PROJECT_DIR}/freebsd/release; env MAKEOBJDIRPREFIX=${BUILD_DIR} make clean cdrom KERNCONF=${KERNEL} KERNEL=${KERNEL})
-	mv ${PROJECT_DIR}/freebsd/release/disc1.iso ${IMAGES_DIR}/
-	touch ${ROOT}/.freebsd-release_done
-
-umount_cdrom:
-	@echo "==================== UnMounting FreeBSD Image  ===================="
-	umount /dev/md10 || exit 0
-	mdconfig -d -u 10 || exit 0
-
-mount_cdrom: umount_cdrom
-	@echo "==================== Mounting FreeBSD Image  ===================="
-	mdconfig -a -t vnode -u 10 -f ${IMAGES_DIR}/disc1.iso
-	mount_cd9660 /dev/md10 ${CDROM_DIR}
-
-mfsbsd: mount_cdrom
+mfsbsd:
 	@echo "==================== Cleaning mfsBSD ===================="
 	(cd ${PROJECT_DIR}/mfsbsd; mkdir -p tmp; make clean)
 	echo "${DATE}" > ${PROJECT_DIR}/mfsbsd/customfiles/etc/buildstamp
 	@echo "==================== Building mfsBSD USB image ===================="
-	(cd ${PROJECT_DIR}/mfsbsd; make BASE=${MFSBSD_BASE} KERNCONF=${KERNEL} PKG_STATIC=${BIN_DIR}/pkg-static MFSROOT_MAXSIZE=${MFSBSD_MFSROOT_MAXSIZE} MFSROOT_FREE_INODES=${MFSBSD_MFSROOT_FREE_INODES} MFSROOT_FREE_BLOCKS=${MFSBSD_MFSROOT_FREE_BLOCKS} IMAGE_PREFIX=${MFSBSD_IMAGE_PREFIX})
+	(cd ${PROJECT_DIR}/mfsbsd; env MAKEOBJDIRPREFIX=${BUILD_DIR} make CUSTOM=1 SRC_DIR=${PROJECT_DIR}/freebsd BASE=${MFSBSD_BASE} KERNCONF=${KERNEL} PKG_STATIC=${BIN_DIR}/pkg-static MFSROOT_MAXSIZE=${MFSBSD_MFSROOT_MAXSIZE} MFSROOT_FREE_INODES=${MFSBSD_MFSROOT_FREE_INODES} MFSROOT_FREE_BLOCKS=${MFSBSD_MFSROOT_FREE_BLOCKS} IMAGE_PREFIX=${MFSBSD_IMAGE_PREFIX})
 	@echo "==================== Building mfsBSD iso ===================="
-	(cd ${PROJECT_DIR}/mfsbsd; make iso BASE=${MFSBSD_BASE} KERNCONF=${KERNEL} PKG_STATIC=${BIN_DIR}/pkg-static MFSROOT_MAXSIZE=${MFSBSD_MFSROOT_MAXSIZE} MFSROOT_FREE_INODES=${MFSBSD_MFSROOT_FREE_INODES} MFSROOT_FREE_BLOCKS=${MFSBSD_MFSROOT_FREE_BLOCKS} IMAGE_PREFIX=${MFSBSD_IMAGE_PREFIX})
+	(cd ${PROJECT_DIR}/mfsbsd; env MAKEOBJDIRPREFIX=${BUILD_DIR} make iso CUSTOM=1 SRC_DIR=${PROJECT_DIR}/freebsd BASE=${MFSBSD_BASE} KERNCONF=${KERNEL} PKG_STATIC=${BIN_DIR}/pkg-static MFSROOT_MAXSIZE=${MFSBSD_MFSROOT_MAXSIZE} MFSROOT_FREE_INODES=${MFSBSD_MFSROOT_FREE_INODES} MFSROOT_FREE_BLOCKS=${MFSBSD_MFSROOT_FREE_BLOCKS} IMAGE_PREFIX=${MFSBSD_IMAGE_PREFIX})
 	@echo "==================== Moving to images_dir  ===================="
 	mv -v ${PROJECT_DIR}/mfsbsd/*.img ${IMAGES_DIR}/
 	mv -v ${PROJECT_DIR}/mfsbsd/*.iso ${IMAGES_DIR}/
@@ -73,7 +57,7 @@ update:
 	(cd ${PROJECT_DIR}/mfsbsd; git pull --rebase)
 	(cd ${PROJECT_DIR}/freebsd; git pull --rebase)
 
-freebsd-live: freebsd freebsd-release mfsbsd
+freebsd-live: freebsd mfsbsd
 
 #
 # For Manual Installation of a Build Machine
@@ -90,4 +74,4 @@ freebsd-world-install:
 
 
 clean:
-	rm -f ${ROOT}/.freebsd-kernel_done ${ROOT}/.freebsd-world_done ${ROOT}/.freebsd-release_done
+	rm -f ${ROOT}/.freebsd-kernel_done ${ROOT}/.freebsd-world_done
