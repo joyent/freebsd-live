@@ -27,8 +27,7 @@ MFSBSD_URL="https://github.com/joyent/mfsbsd.git"
 PROJECTS_DIR=projects
 BUILD_DIR=build
 IMAGES_DIR=images
-CDROM_DIR=cdrom
-(mkdir -p ${CDROM_DIR} ${PROJECTS_DIR} ${BUILD_DIR} ${IMAGES_DIR})
+(mkdir -p ${PROJECTS_DIR} ${BUILD_DIR} ${IMAGES_DIR})
 
 #
 # Pull down FreeBSD

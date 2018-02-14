@@ -8,7 +8,6 @@ PROJECT_DIR = ${ROOT}/projects
 IMAGES_DIR ?= ${ROOT}/images
 BIN_DIR = ${ROOT}/bin
 CONF_DIR = ${ROOT}/conf
-CDROM_DIR = ${ROOT}/cdrom
 NUM_JOBS ?= `sysctl -n hw.ncpu`
 
 #
@@ -19,7 +18,6 @@ KERNEL ?= BHYVE
 #
 # mfsBSD Build Variables
 #
-MFSBSD_BASE=${ROOT}/cdrom/usr/freebsd-dist
 MFSBSD_MFSROOT_MAXSIZE=512m
 MFSBSD_MFSROOT_FREE_INODES=20%
 MFSBSD_MFSROOT_FREE_BLOCKS=20%
