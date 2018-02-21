@@ -72,4 +72,6 @@ freebsd-world-install:
 
 
 clean:
-	rm -f ${ROOT}/.freebsd-kernel_done ${ROOT}/.freebsd-world_done
+	(cd build; chflags -f -R noschg *; rm -rf *) || true
+	(rm -f ${ROOT}/.freebsd-kernel_done ${ROOT}/.freebsd-world_done)
+
