@@ -36,7 +36,7 @@ ${ROOT}/.freebsd-world_done:
 freebsd-kernel: freebsd-world ${ROOT}/.freebsd-kernel_done
 ${ROOT}/.freebsd-kernel_done:
 	@echo "==================== Building FreeBSD Kernel  ===================="
-	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} make -DNO_CLEAN -j ${NUM_JOBS} buildkernel KERNCONF=${KERNEL})
+	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} make -j ${NUM_JOBS} buildkernel KERNCONF=${KERNEL})
 	touch ${ROOT}/.freebsd-kernel_done
 
 mfsbsd:
@@ -74,4 +74,6 @@ freebsd-world-install:
 clean:
 	(cd build; chflags -f -R noschg *; rm -rf *) || true
 	(rm -f ${ROOT}/.freebsd-kernel_done ${ROOT}/.freebsd-world_done)
+clean-kernel:
+	(rm -f ${ROOT}/.freebsd-kernel_done)
 
