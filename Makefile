@@ -13,7 +13,7 @@ NUM_JOBS ?= `sysctl -n hw.ncpu`
 #
 # FreeBSD Build Variables
 #
-KERNEL ?= BHYVE
+KERNEL ?= BHYVE-NODEBUG
 
 #
 # mfsBSD Build Variables
