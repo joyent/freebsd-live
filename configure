@@ -22,6 +22,11 @@ FREEBSD_URL="https://github.com/joyent/freebsd.git"
 MFSBSD_URL="https://github.com/joyent/mfsbsd.git"
 
 #
+# Install Packages
+#
+pkg install -y git xtoolchain-llvm-devel
+
+#
 # Setup directories
 #
 PROJECTS_DIR=projects
