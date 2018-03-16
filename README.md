@@ -24,7 +24,7 @@ cd freebsd-live
 make freebsd-world freebsd-kernel
 make freebsd-install 
 reboot
-[log back in]
+# [log back in]
 cd freebsd-live
 make freebsd-world-install
 reboot
