@@ -3,7 +3,6 @@
 
 ## Requirements
 OS: FreeBSD 12-CURRENT
-Packages: git, llvm-devel
 
 ## Quickstart
 ```
