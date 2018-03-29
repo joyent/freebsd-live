@@ -24,7 +24,7 @@ MFSBSD_URL="https://github.com/joyent/mfsbsd.git"
 #
 # Install Packages
 #
-pkg install -y git xtoolchain-llvm-devel
+pkg install -y git xtoolchain-llvm60
 
 #
 # Setup directories
