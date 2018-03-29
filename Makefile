@@ -30,7 +30,7 @@ freebsd: freebsd-world freebsd-kernel
 freebsd-world: ${ROOT}/.freebsd-world_done
 ${ROOT}/.freebsd-world_done:
 	@echo "==================== Building FreeBSD World ===================="
-	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} make -DNO_CLEAN -j ${NUM_JOBS} buildworld KERNCONF=${KERNEL})
+	(cd ${PROJECT_DIR}/freebsd; env SRCCONF=${CONF_DIR}/src.conf MAKEOBJDIRPREFIX=${BUILD_DIR} make -j ${NUM_JOBS} buildworld KERNCONF=${KERNEL})
 	touch ${ROOT}/.freebsd-world_done
 
 freebsd-kernel: freebsd-world ${ROOT}/.freebsd-kernel_done
